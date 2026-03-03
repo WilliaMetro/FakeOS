@@ -1,16 +1,24 @@
 class RuntimeError(BaseException):
     pass
 
-def launchup(*program_avgrs):
-    try:
-        launchapp="__import__('"+ str(program_avgrs[0]) + "').app("+str(program_avgrs)+")"
-        exec(launchapp)
-    except BaseException as e:
-        raise RuntimeError(e)
 
-class info:
-    appVersion = '0.0.1'
-    appBuild = '1'
-    appAuthor = 'Error063'
-    appCompany = 'Example Company'
-    createTime = 1627625284
+def launchup(*program_args):
+    if not program_args:
+        print("No command entered.")
+        return
+
+    command = program_args[0]
+
+    try:
+        module = __import__(command)
+
+        if hasattr(module, "app"):
+            module.app(program_args)
+        else:
+            print(f"Command '{command}' exists but has no app() function.")
+
+    except ModuleNotFoundError:
+        print(f"Command '{command}' not found.")
+
+    except Exception as e:
+        print("Runtime error:", e)
