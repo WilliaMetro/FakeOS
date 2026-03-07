@@ -1,4 +1,6 @@
 import login, commandlined, shelve
+import os
+print(os.getcwd())
 
 threaddb = shelve.open("../data/system/thread")
 threaddb["list"] = {}

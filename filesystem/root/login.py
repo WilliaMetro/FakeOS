@@ -1,27 +1,31 @@
-def login():
-    import hashlib, shelve
-    username = input("Username:")
-    password = input("Password:")
+def app(program_args):
+    import hashlib, shelve, os
+
+    username = input("Username: ")
+    password = input("Password: ")
+
     if username == '' or password == '':
         print("Username or password error, try again")
         return None
+
     passwordCheck = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    userdb = shelve.open("../data/system/main")
-    for i in range(0, len(userdb["users"])):
-        try:
-            realPassword = userdb["users"][i][username]
-        except KeyError:
-            continue
-    if realPassword == passwordCheck:
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.abspath(os.path.join(base_dir, "../../filesystem/data/system/main"))
+
+    userdb = shelve.open(path)
+
+    realPassword = None
+
+    for user in userdb["users"]:
+        if username in user:
+            realPassword = user[username]
+            break
+
+    userdb.close()
+
+    if realPassword and realPassword == passwordCheck:
         return username
-        userdb.close()
     else:
         print("Username or password error, try again")
-
-
-class info:
-    appVersion = '0.0.1'
-    appBuild = '1'
-    appAuthor = 'Error063'
-    appCompany = 'Example Company'
-    createTime = 1627625284
+        return None
