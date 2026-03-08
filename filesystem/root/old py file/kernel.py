@@ -8,10 +8,6 @@ threaddb['total'] = 0
 threaddb.sync()
 threaddb.close()
 
-username = None
-while username is None:
-    username = login.app([])
-
 debug = True
 if not debug:
     username = None
